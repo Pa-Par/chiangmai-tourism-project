@@ -1,0 +1,98 @@
+
+> chiangmai-tourism-frontend@1.0.0 dev
+> vite --host 127.0.0.1
+
+
+  VITE v5.4.21  ready in 1725 ms
+
+  ➜  Local:   http://127.0.0.1:5173/
+  ➜  press h + enter to show help
+16:28:13 [vite] hmr update /src/components/AttractionCard.jsx
+16:28:14 [vite] hmr update /src/pages/ResultPage.jsx
+16:28:33 [vite] hmr update /src/App.jsx, /src/components/TripForm.jsx, /src/components/AttractionCard.jsx
+16:28:34 [vite] hmr update /src/components/TripForm.jsx
+16:28:53 [vite] hmr update /src/index.css
+0:39:54 [vite] hmr update /src/components/AttractionCard.jsx
+0:40:03 [vite] hmr update /src/components/AttractionCard.jsx
+0:40:19 [vite] hmr update /src/components/TripOverview.jsx
+0:40:36 [vite] hmr update /src/App.jsx, /src/components/TripForm.jsx, /src/components/AttractionCard.jsx
+0:41:00 [vite] hmr update /src/index.css
+0:56:32 [vite] hmr update /src/components/AdditionalRecommendations.jsx
+0:56:33 [vite] hmr update /src/pages/ResultPage.jsx
+0:56:34 [vite] hmr update /src/components/TripOverview.jsx
+0:56:35 [vite] hmr update /src/App.jsx, /src/components/TripForm.jsx, /src/components/AttractionCard.jsx
+0:56:36 [vite] hmr update /src/index.css
+1:09:15 [vite] hmr update /src/components/RecommendationCard.jsx
+1:09:16 [vite] hmr update /src/components/TripOverview.jsx
+1:09:18 [vite] hmr update /src/App.jsx, /src/components/TripForm.jsx, /src/components/AttractionCard.jsx
+1:09:30 [vite] hmr update /src/index.css
+12:51:44 [vite] hmr update /src/components/TripMap.jsx
+12:52:16 [vite] hmr update /src/pages/ResultPage.jsx
+12:52:17 [vite] hmr update /src/App.jsx, /src/components/TripForm.jsx, /src/components/AttractionCard.jsx
+12:53:12 [vite] hmr update /src/index.css
+12:53:25 [vite] hmr update /src/index.css
+20:50:06 [vite] .env changed, restarting server...
+20:50:07 [vite] server restarted.
+3:01:29 [vite] hmr update /src/components/AttractionCard.jsx
+3:01:30 [vite] hmr update /src/components/RecommendationCard.jsx
+3:01:30 [vite] hmr update /src/App.jsx, /src/components/TripForm.jsx, /src/components/AttractionCard.jsx
+3:01:31 [vite] hmr update /src/index.css
+3:01:57 [vite] hmr update /src/components/RecommendationCard.jsx
+3:09:08 [vite] hmr update /src/components/ImageWithFallback.jsx
+3:14:57 [vite] hmr update /src/components/AttractionCard.jsx
+11:39:23 [vite] hmr update /src/components/RecommendationCard.jsx
+11:39:24 [vite] hmr update /src/App.jsx, /src/components/TripForm.jsx, /src/components/AttractionCard.jsx
+11:39:25 [vite] hmr update /src/index.css
+11:43:25 [vite] hmr update /src/components/RecommendationCard.jsx
+11:43:25 [vite] hmr update /src/components/RecommendationCard.jsx
+11:43:30 [vite] hmr update /src/App.jsx, /src/components/TripForm.jsx, /src/components/AttractionCard.jsx
+18:50:33 [vite] hmr update /src/components/TripOverview.jsx
+18:50:33 [vite] hmr update /src/components/TripOverview.jsx
+18:50:34 [vite] hmr update /src/components/AttractionCard.jsx
+18:50:35 [vite] hmr update /src/components/RecommendationCard.jsx
+18:50:36 [vite] hmr update /src/App.jsx, /src/components/TripForm.jsx, /src/components/AttractionCard.jsx
+18:50:36 [vite] hmr update /src/index.css
+19:21:41 [vite] hmr update /src/components/TripMap.jsx
+19:22:51 [vite] hmr update /src/components/TripMap.jsx
+19:23:07 [vite] hmr update /src/components/TripMap.jsx
+19:23:27 [vite] hmr update /src/components/TripForm.jsx
+19:23:52 [vite] hmr update /src/App.jsx
+19:23:52 [vite] hmr update /src/pages/ResultPage.jsx
+19:24:16 [vite] hmr update /src/components/ItineraryTimeline.jsx
+19:24:45 [vite] hmr update /src/components/ItineraryTimeline.jsx
+19:25:14 [vite] hmr update /src/components/TransportationCard.jsx
+19:25:15 [vite] hmr update /src/App.jsx, /src/components/TripForm.jsx, /src/components/AttractionCard.jsx
+19:25:49 [vite] hmr update /src/index.css
+19:26:01 [vite] hmr update /src/components/TripForm.jsx
+19:29:15 [vite] hmr update /src/components/TripForm.jsx
+19:29:17 [vite] hmr update /src/App.jsx
+19:29:18 [vite] hmr update /src/App.jsx, /src/components/TripForm.jsx, /src/components/AttractionCard.jsx
+19:29:19 [vite] hmr update /src/index.css
+19:29:35 [vite] hmr update /src/App.jsx
+20:11:13 [vite] hmr update /src/components/TripForm.jsx
+20:12:15 [vite] hmr update /src/components/TripForm.jsx
+20:12:34 [vite] hmr update /src/App.jsx
+20:13:01 [vite] hmr update /src/App.jsx, /src/components/AttractionCard.jsx, /src/components/TripForm.jsx
+20:13:25 [vite] hmr update /src/index.css
+20:16:03 [vite] hmr update /src/pages/ResultPage.jsx
+20:16:04 [vite] hmr update /src/components/TripMap.jsx
+20:17:23 [vite] hmr update /src/App.jsx
+20:17:25 [vite] hmr update /src/pages/HomePage.jsx
+20:17:26 [vite] hmr update /src/components/TripForm.jsx
+20:17:26 [vite] hmr update /src/components/StartLocationPicker.jsx
+20:20:25 [vite] hmr update /src/components/StartLocationPicker.jsx
+20:20:26 [vite] hmr update /src/App.jsx, /src/components/AttractionCard.jsx, /src/components/TripForm.jsx
+20:20:27 [vite] hmr update /src/index.css
+20:21:48 [vite] hmr update /src/components/TripMap.jsx
+20:28:43 [vite] hmr update /src/components/TripMap.jsx
+20:28:44 [vite] hmr update /src/pages/ResultPage.jsx
+20:28:45 [vite] hmr update /src/App.jsx, /src/components/AttractionCard.jsx, /src/components/TripForm.jsx
+20:29:39 [vite] hmr update /src/components/TripMap.jsx
+20:29:40 [vite] hmr update /src/pages/ResultPage.jsx
+20:30:25 [vite] hmr update /src/components/TripMap.jsx
+20:57:03 [vite] hmr update /src/components/StartLocationPicker.jsx
+20:57:04 [vite] hmr update /src/index.css
+20:59:39 [vite] hmr update /src/components/StartLocationPicker.jsx
+21:00:29 [vite] hmr update /src/App.jsx
+21:00:30 [vite] hmr update /src/components/StartLocationPicker.jsx
+21:00:31 [vite] hmr update /src/components/TripMap.jsx

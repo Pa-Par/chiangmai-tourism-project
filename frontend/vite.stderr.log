@@ -1,0 +1,331 @@
+0:56:32 [vite] Internal server error: Failed to resolve import "./RecommendationCard" from "src/components/AdditionalRecommendations.jsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: D:/chiangmai-tourism-project/frontend/src/components/AdditionalRecommendations.jsx:2:31
+  17 |  var _s = $RefreshSig$();
+  18 |  import { useState } from "react";
+  19 |  import RecommendationCard from "./RecommendationCard";
+     |                                  ^
+  20 |  const INITIAL_VISIBLE_COUNT = 2;
+  21 |  function RecommendationGroup({
+      at TransformPluginContext._formatError (file:///D:/chiangmai-tourism-project/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///D:/chiangmai-tourism-project/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///D:/chiangmai-tourism-project/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async file:///D:/chiangmai-tourism-project/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///D:/chiangmai-tourism-project/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///D:/chiangmai-tourism-project/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///D:/chiangmai-tourism-project/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+0:56:32 [vite] Internal server error: Failed to resolve import "./RecommendationCard" from "src/components/AdditionalRecommendations.jsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: D:/chiangmai-tourism-project/frontend/src/components/AdditionalRecommendations.jsx:2:31
+  17 |  var _s = $RefreshSig$();
+  18 |  import { useState } from "react";
+  19 |  import RecommendationCard from "./RecommendationCard";
+     |                                  ^
+  20 |  const INITIAL_VISIBLE_COUNT = 2;
+  21 |  function RecommendationGroup({
+      at TransformPluginContext._formatError (file:///D:/chiangmai-tourism-project/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///D:/chiangmai-tourism-project/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///D:/chiangmai-tourism-project/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async file:///D:/chiangmai-tourism-project/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///D:/chiangmai-tourism-project/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///D:/chiangmai-tourism-project/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///D:/chiangmai-tourism-project/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+20:28:44 [vite] Internal server error: D:\chiangmai-tourism-project\frontend\src\components\TripMap.jsx: Unexpected token, expected "}" (409:6)
+
+  407 |       ? `&waypoints=${encodeURIComponent(firstRouteStops.slice(0, -1)
+  408 |         .map((stop) => `${toLatLng(stop).lat},${toLatLng(stop).lng`).join("|"))}`
+> 409 |       : ""}`
+      |       ^
+  410 |     : null;
+  411 |
+  412 |   return (
+  Plugin: vite:react-babel
+  File: D:/chiangmai-tourism-project/frontend/src/components/TripMap.jsx:409:6
+  407|        ? `&waypoints=${encodeURIComponent(firstRouteStops.slice(0, -1)
+  408|          .map((stop) => `${toLatLng(stop).lat},${toLatLng(stop).lng`).join("|"))}`
+  409|        : ""}`
+     |        ^
+  410|      : null;
+  411|  
+      at constructor (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:369:19)
+      at JSXParserMixin.raise (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:6620:19)
+      at JSXParserMixin.unexpected (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:6640:16)
+      at JSXParserMixin.readTemplateContinuation (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:6527:12)
+      at JSXParserMixin.parseTemplate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11826:12)
+      at JSXParserMixin.parseExprAtom (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11377:21)
+      at JSXParserMixin.parseExprAtom (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:4780:20)
+      at JSXParserMixin.parseExprSubscripts (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11102:23)
+      at JSXParserMixin.parseUpdate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11087:21)
+      at JSXParserMixin.parseMaybeUnary (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11067:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10920:61)
+      at JSXParserMixin.parseExprOps (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10925:23)
+      at JSXParserMixin.parseMaybeConditional (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10902:23)
+      at JSXParserMixin.parseMaybeAssign (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10852:21)
+      at JSXParserMixin.parseFunctionBody (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12122:24)
+      at JSXParserMixin.parseArrowExpression (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12104:10)
+      at JSXParserMixin.parseParenAndDistinguishExpression (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11713:12)
+      at JSXParserMixin.parseExprAtom (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11357:23)
+      at JSXParserMixin.parseExprAtom (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:4780:20)
+      at JSXParserMixin.parseExprSubscripts (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11102:23)
+      at JSXParserMixin.parseUpdate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11087:21)
+      at JSXParserMixin.parseMaybeUnary (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11067:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10920:61)
+      at JSXParserMixin.parseExprOps (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10925:23)
+      at JSXParserMixin.parseMaybeConditional (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10902:23)
+      at JSXParserMixin.parseMaybeAssign (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10852:21)
+      at D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10821:39
+      at JSXParserMixin.allowInAnd (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12455:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10821:17)
+      at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12522:17)
+      at JSXParserMixin.parseExprListItem (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12204:18)
+      at JSXParserMixin.parseCallExpressionArguments (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11278:22)
+      at JSXParserMixin.parseCoverCallAndAsyncArrowHead (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11212:29)
+      at JSXParserMixin.parseSubscript (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11141:19)
+      at JSXParserMixin.parseSubscripts (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11115:19)
+      at JSXParserMixin.parseExprSubscripts (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11106:17)
+      at JSXParserMixin.parseUpdate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11087:21)
+      at JSXParserMixin.parseMaybeUnary (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11067:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10920:61)
+      at JSXParserMixin.parseExprOps (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10925:23)
+      at JSXParserMixin.parseMaybeConditional (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10902:23)
+      at JSXParserMixin.parseMaybeAssign (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10852:21)
+      at D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10821:39
+      at JSXParserMixin.allowInAnd (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12455:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10821:17)
+      at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12522:17)
+      at JSXParserMixin.parseExprListItem (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12204:18)
+      at JSXParserMixin.parseCallExpressionArguments (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11278:22)
+      at JSXParserMixin.parseCoverCallAndAsyncArrowHead (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11212:29)
+      at JSXParserMixin.parseSubscript (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11141:19)
+20:28:44 [vite] Internal server error: D:\chiangmai-tourism-project\frontend\src\components\TripMap.jsx: Unexpected token, expected "}" (409:6)
+
+  407 |       ? `&waypoints=${encodeURIComponent(firstRouteStops.slice(0, -1)
+  408 |         .map((stop) => `${toLatLng(stop).lat},${toLatLng(stop).lng`).join("|"))}`
+> 409 |       : ""}`
+      |       ^
+  410 |     : null;
+  411 |
+  412 |   return (
+  Plugin: vite:react-babel
+  File: D:/chiangmai-tourism-project/frontend/src/components/TripMap.jsx:409:6
+  407|        ? `&waypoints=${encodeURIComponent(firstRouteStops.slice(0, -1)
+  408|          .map((stop) => `${toLatLng(stop).lat},${toLatLng(stop).lng`).join("|"))}`
+  409|        : ""}`
+     |        ^
+  410|      : null;
+  411|  
+      at constructor (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:369:19)
+      at JSXParserMixin.raise (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:6620:19)
+      at JSXParserMixin.unexpected (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:6640:16)
+      at JSXParserMixin.readTemplateContinuation (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:6527:12)
+      at JSXParserMixin.parseTemplate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11826:12)
+      at JSXParserMixin.parseExprAtom (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11377:21)
+      at JSXParserMixin.parseExprAtom (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:4780:20)
+      at JSXParserMixin.parseExprSubscripts (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11102:23)
+      at JSXParserMixin.parseUpdate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11087:21)
+      at JSXParserMixin.parseMaybeUnary (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11067:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10920:61)
+      at JSXParserMixin.parseExprOps (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10925:23)
+      at JSXParserMixin.parseMaybeConditional (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10902:23)
+      at JSXParserMixin.parseMaybeAssign (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10852:21)
+      at JSXParserMixin.parseFunctionBody (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12122:24)
+      at JSXParserMixin.parseArrowExpression (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12104:10)
+      at JSXParserMixin.parseParenAndDistinguishExpression (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11713:12)
+      at JSXParserMixin.parseExprAtom (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11357:23)
+      at JSXParserMixin.parseExprAtom (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:4780:20)
+      at JSXParserMixin.parseExprSubscripts (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11102:23)
+      at JSXParserMixin.parseUpdate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11087:21)
+      at JSXParserMixin.parseMaybeUnary (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11067:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10920:61)
+      at JSXParserMixin.parseExprOps (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10925:23)
+      at JSXParserMixin.parseMaybeConditional (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10902:23)
+      at JSXParserMixin.parseMaybeAssign (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10852:21)
+      at D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10821:39
+      at JSXParserMixin.allowInAnd (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12455:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10821:17)
+      at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12522:17)
+      at JSXParserMixin.parseExprListItem (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12204:18)
+      at JSXParserMixin.parseCallExpressionArguments (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11278:22)
+      at JSXParserMixin.parseCoverCallAndAsyncArrowHead (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11212:29)
+      at JSXParserMixin.parseSubscript (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11141:19)
+      at JSXParserMixin.parseSubscripts (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11115:19)
+      at JSXParserMixin.parseExprSubscripts (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11106:17)
+      at JSXParserMixin.parseUpdate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11087:21)
+      at JSXParserMixin.parseMaybeUnary (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11067:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10920:61)
+      at JSXParserMixin.parseExprOps (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10925:23)
+      at JSXParserMixin.parseMaybeConditional (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10902:23)
+      at JSXParserMixin.parseMaybeAssign (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10852:21)
+      at D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10821:39
+      at JSXParserMixin.allowInAnd (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12455:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10821:17)
+      at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12522:17)
+      at JSXParserMixin.parseExprListItem (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12204:18)
+      at JSXParserMixin.parseCallExpressionArguments (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11278:22)
+      at JSXParserMixin.parseCoverCallAndAsyncArrowHead (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11212:29)
+      at JSXParserMixin.parseSubscript (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11141:19)
+20:28:44 [vite] Pre-transform error: D:\chiangmai-tourism-project\frontend\src\components\TripMap.jsx: Unexpected token, expected "}" (409:6)
+
+  407 |       ? `&waypoints=${encodeURIComponent(firstRouteStops.slice(0, -1)
+  408 |         .map((stop) => `${toLatLng(stop).lat},${toLatLng(stop).lng`).join("|"))}`
+> 409 |       : ""}`
+      |       ^
+  410 |     : null;
+  411 |
+  412 |   return (
+20:28:45 [vite] Pre-transform error: D:\chiangmai-tourism-project\frontend\src\components\TripMap.jsx: Unexpected token, expected "}" (409:6)
+
+  407 |       ? `&waypoints=${encodeURIComponent(firstRouteStops.slice(0, -1)
+  408 |         .map((stop) => `${toLatLng(stop).lat},${toLatLng(stop).lng`).join("|"))}`
+> 409 |       : ""}`
+      |       ^
+  410 |     : null;
+  411 |
+  412 |   return (
+20:29:39 [vite] Internal server error: D:\chiangmai-tourism-project\frontend\src\components\TripMap.jsx: Unexpected token, expected "}" (420:6)
+
+  418 |       ? `&waypoints=${encodeURIComponent(firstRouteStops.slice(0, -1)
+  419 |         .map((stop) => `${toLatLng(stop).lat},${toLatLng(stop).lng`).join("|"))}`
+> 420 |       : ""}`
+      |       ^
+  421 |     : null;
+  422 |
+  423 |   return (
+  Plugin: vite:react-babel
+  File: D:/chiangmai-tourism-project/frontend/src/components/TripMap.jsx:420:6
+  418|        ? `&waypoints=${encodeURIComponent(firstRouteStops.slice(0, -1)
+  419|          .map((stop) => `${toLatLng(stop).lat},${toLatLng(stop).lng`).join("|"))}`
+  420|        : ""}`
+     |        ^
+  421|      : null;
+  422|  
+      at constructor (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:369:19)
+      at JSXParserMixin.raise (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:6620:19)
+      at JSXParserMixin.unexpected (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:6640:16)
+      at JSXParserMixin.readTemplateContinuation (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:6527:12)
+      at JSXParserMixin.parseTemplate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11826:12)
+      at JSXParserMixin.parseExprAtom (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11377:21)
+      at JSXParserMixin.parseExprAtom (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:4780:20)
+      at JSXParserMixin.parseExprSubscripts (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11102:23)
+      at JSXParserMixin.parseUpdate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11087:21)
+      at JSXParserMixin.parseMaybeUnary (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11067:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10920:61)
+      at JSXParserMixin.parseExprOps (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10925:23)
+      at JSXParserMixin.parseMaybeConditional (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10902:23)
+      at JSXParserMixin.parseMaybeAssign (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10852:21)
+      at JSXParserMixin.parseFunctionBody (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12122:24)
+      at JSXParserMixin.parseArrowExpression (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12104:10)
+      at JSXParserMixin.parseParenAndDistinguishExpression (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11713:12)
+      at JSXParserMixin.parseExprAtom (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11357:23)
+      at JSXParserMixin.parseExprAtom (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:4780:20)
+      at JSXParserMixin.parseExprSubscripts (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11102:23)
+      at JSXParserMixin.parseUpdate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11087:21)
+      at JSXParserMixin.parseMaybeUnary (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11067:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10920:61)
+      at JSXParserMixin.parseExprOps (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10925:23)
+      at JSXParserMixin.parseMaybeConditional (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10902:23)
+      at JSXParserMixin.parseMaybeAssign (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10852:21)
+      at D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10821:39
+      at JSXParserMixin.allowInAnd (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12455:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10821:17)
+      at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12522:17)
+      at JSXParserMixin.parseExprListItem (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12204:18)
+      at JSXParserMixin.parseCallExpressionArguments (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11278:22)
+      at JSXParserMixin.parseCoverCallAndAsyncArrowHead (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11212:29)
+      at JSXParserMixin.parseSubscript (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11141:19)
+      at JSXParserMixin.parseSubscripts (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11115:19)
+      at JSXParserMixin.parseExprSubscripts (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11106:17)
+      at JSXParserMixin.parseUpdate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11087:21)
+      at JSXParserMixin.parseMaybeUnary (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11067:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10920:61)
+      at JSXParserMixin.parseExprOps (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10925:23)
+      at JSXParserMixin.parseMaybeConditional (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10902:23)
+      at JSXParserMixin.parseMaybeAssign (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10852:21)
+      at D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10821:39
+      at JSXParserMixin.allowInAnd (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12455:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10821:17)
+      at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12522:17)
+      at JSXParserMixin.parseExprListItem (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12204:18)
+      at JSXParserMixin.parseCallExpressionArguments (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11278:22)
+      at JSXParserMixin.parseCoverCallAndAsyncArrowHead (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11212:29)
+      at JSXParserMixin.parseSubscript (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11141:19)
+20:29:39 [vite] Internal server error: D:\chiangmai-tourism-project\frontend\src\components\TripMap.jsx: Unexpected token, expected "}" (420:6)
+
+  418 |       ? `&waypoints=${encodeURIComponent(firstRouteStops.slice(0, -1)
+  419 |         .map((stop) => `${toLatLng(stop).lat},${toLatLng(stop).lng`).join("|"))}`
+> 420 |       : ""}`
+      |       ^
+  421 |     : null;
+  422 |
+  423 |   return (
+  Plugin: vite:react-babel
+  File: D:/chiangmai-tourism-project/frontend/src/components/TripMap.jsx:420:6
+  418|        ? `&waypoints=${encodeURIComponent(firstRouteStops.slice(0, -1)
+  419|          .map((stop) => `${toLatLng(stop).lat},${toLatLng(stop).lng`).join("|"))}`
+  420|        : ""}`
+     |        ^
+  421|      : null;
+  422|  
+      at constructor (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:369:19)
+      at JSXParserMixin.raise (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:6620:19)
+      at JSXParserMixin.unexpected (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:6640:16)
+      at JSXParserMixin.readTemplateContinuation (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:6527:12)
+      at JSXParserMixin.parseTemplate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11826:12)
+      at JSXParserMixin.parseExprAtom (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11377:21)
+      at JSXParserMixin.parseExprAtom (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:4780:20)
+      at JSXParserMixin.parseExprSubscripts (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11102:23)
+      at JSXParserMixin.parseUpdate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11087:21)
+      at JSXParserMixin.parseMaybeUnary (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11067:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10920:61)
+      at JSXParserMixin.parseExprOps (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10925:23)
+      at JSXParserMixin.parseMaybeConditional (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10902:23)
+      at JSXParserMixin.parseMaybeAssign (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10852:21)
+      at JSXParserMixin.parseFunctionBody (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12122:24)
+      at JSXParserMixin.parseArrowExpression (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12104:10)
+      at JSXParserMixin.parseParenAndDistinguishExpression (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11713:12)
+      at JSXParserMixin.parseExprAtom (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11357:23)
+      at JSXParserMixin.parseExprAtom (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:4780:20)
+      at JSXParserMixin.parseExprSubscripts (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11102:23)
+      at JSXParserMixin.parseUpdate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11087:21)
+      at JSXParserMixin.parseMaybeUnary (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11067:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10920:61)
+      at JSXParserMixin.parseExprOps (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10925:23)
+      at JSXParserMixin.parseMaybeConditional (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10902:23)
+      at JSXParserMixin.parseMaybeAssign (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10852:21)
+      at D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10821:39
+      at JSXParserMixin.allowInAnd (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12455:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10821:17)
+      at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12522:17)
+      at JSXParserMixin.parseExprListItem (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12204:18)
+      at JSXParserMixin.parseCallExpressionArguments (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11278:22)
+      at JSXParserMixin.parseCoverCallAndAsyncArrowHead (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11212:29)
+      at JSXParserMixin.parseSubscript (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11141:19)
+      at JSXParserMixin.parseSubscripts (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11115:19)
+      at JSXParserMixin.parseExprSubscripts (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11106:17)
+      at JSXParserMixin.parseUpdate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11087:21)
+      at JSXParserMixin.parseMaybeUnary (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11067:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10920:61)
+      at JSXParserMixin.parseExprOps (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10925:23)
+      at JSXParserMixin.parseMaybeConditional (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10902:23)
+      at JSXParserMixin.parseMaybeAssign (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10852:21)
+      at D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10821:39
+      at JSXParserMixin.allowInAnd (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12455:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:10821:17)
+      at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12522:17)
+      at JSXParserMixin.parseExprListItem (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:12204:18)
+      at JSXParserMixin.parseCallExpressionArguments (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11278:22)
+      at JSXParserMixin.parseCoverCallAndAsyncArrowHead (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11212:29)
+      at JSXParserMixin.parseSubscript (D:\chiangmai-tourism-project\frontend\node_modules\@babel\parser\lib\index.js:11141:19)
+20:29:40 [vite] Pre-transform error: D:\chiangmai-tourism-project\frontend\src\components\TripMap.jsx: Unexpected token, expected "}" (420:6)
+
+  418 |       ? `&waypoints=${encodeURIComponent(firstRouteStops.slice(0, -1)
+  419 |         .map((stop) => `${toLatLng(stop).lat},${toLatLng(stop).lng`).join("|"))}`
+> 420 |       : ""}`
+      |       ^
+  421 |     : null;
+  422 |
+  423 |   return (
