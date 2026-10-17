@@ -11,7 +11,16 @@ class DatabaseError(Exception):
 
 
 def get_db_connection():
-    """Create a connection without creating or modifying any database objects."""
+    """Create a connection without creating or modifying database objects."""
+    ssl_ca = current_app.config.get("DB_SSL_CA", "").strip()
+    ssl_options = None
+
+    if ssl_ca:
+        if not os.path.isabs(ssl_ca):
+            ssl_ca = os.path.join(os.path.dirname(__file__), ssl_ca)
+
+        ssl_options = {"ca": ssl_ca}
+
     return pymysql.connect(
         host=current_app.config["DB_HOST"],
         port=current_app.config["DB_PORT"],
@@ -21,6 +30,7 @@ def get_db_connection():
         charset="utf8mb4",
         cursorclass=pymysql.cursors.DictCursor,
         autocommit=True,
+        ssl=ssl_options,
     )
 
 

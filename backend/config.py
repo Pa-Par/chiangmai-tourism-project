@@ -16,6 +16,7 @@ class Config:
     DB_USER = os.getenv("DB_USER", "root")
     DB_PASSWORD = os.getenv("DB_PASSWORD", "")
     DB_NAME = os.getenv("DB_NAME", "chiangmai_torism_db")
+    DB_SSL_CA = os.getenv("DB_SSL_CA", "").strip()
 
     FLASK_HOST = os.getenv("FLASK_HOST", "127.0.0.1")
     FLASK_PORT = int(os.getenv("FLASK_PORT", "5000"))
