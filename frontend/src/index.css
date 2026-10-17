@@ -412,6 +412,24 @@ a:focus-visible {
   background: var(--leaf);
 }
 
+.start-pin-button {
+  border: 1px solid #b9d8bd;
+  border-radius: 9px;
+  padding: 8px 10px;
+  background: #fff;
+  color: var(--forest);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.start-pin-button:hover,
+.start-pin-button.active {
+  border-color: var(--leaf);
+  background: #eaf6e9;
+}
+
 .start-picker-hint,
 .start-search-limitation,
 .start-place-search {
@@ -506,9 +524,30 @@ a:focus-visible {
   background: #e9f2e6;
 }
 
+.start-picker-map-shell.is-pinning {
+  border-color: var(--leaf);
+  box-shadow: 0 0 0 3px rgba(47, 137, 80, 0.12);
+}
+
 .start-picker-map {
   width: 100%;
   height: 100%;
+}
+
+.map-pin-instruction {
+  position: absolute;
+  z-index: 500;
+  top: 10px;
+  right: 10px;
+  left: 10px;
+  margin: 0;
+  border-radius: 8px;
+  padding: 7px 9px;
+  background: rgba(22, 84, 53, 0.94);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  pointer-events: none;
 }
 
 .leaflet-map .leaflet-control-attribution {

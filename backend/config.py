@@ -22,11 +22,23 @@ class Config:
     FLASK_PORT = int(os.getenv("FLASK_PORT", "5000"))
     FLASK_DEBUG = os.getenv("FLASK_DEBUG", "false").lower() == "true"
 
-    CORS_ORIGINS = [
+    # Keep the production site and local development origins available even
+    # when an older Render environment value still contains only a preview URL.
+    # This remains an exact allow-list; no wildcard CORS origin is used.
+    _DEFAULT_CORS_ORIGINS = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        # Used by the local Vite production preview; it remains a specific
+        # development origin rather than opening CORS to every localhost port.
+        "http://127.0.0.1:5181",
+        "https://chiangmai-tourism-project-flame.vercel.app",
+    ]
+    _ENV_CORS_ORIGINS = [
         origin.strip()
-        for origin in os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")
+        for origin in os.getenv("CORS_ORIGINS", "").split(",")
         if origin.strip()
     ]
+    CORS_ORIGINS = list(dict.fromkeys(_DEFAULT_CORS_ORIGINS + _ENV_CORS_ORIGINS))
 
     # Server-only integrations.  Keys are deliberately read from .env so they
     # are never bundled into the React application or committed to source code.

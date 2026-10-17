@@ -12,6 +12,9 @@ import "leaflet/dist/leaflet.css";
 
 const NOMINATIM_SEARCH_URL = "https://nominatim.openstreetmap.org/search";
 const MIN_SEARCH_INTERVAL_MS = 1100;
+// This is only the initial viewport for the Chiang Mai project. It is never
+// submitted as a travel origin unless the user deliberately places a marker.
+const DEFAULT_MAP_VIEW = { lat: 18.788343, lng: 98.9853 };
 
 function hasCoordinates(location) {
   const latitude = Number(location?.latitude);
@@ -52,9 +55,10 @@ function MapViewport({ point, zoom }) {
   return null;
 }
 
-function MapClickHandler({ onSelect }) {
+function MapClickHandler({ enabled, onSelect }) {
   useMapEvents({
     click(event) {
+      if (!enabled) return;
       onSelect({
         latitude: event.latlng.lat,
         longitude: event.latlng.lng,
@@ -73,10 +77,11 @@ function StartLocationPicker({ location, mapCenter, onLocationChange, t }) {
   const [searchStatus, setSearchStatus] = useState("ready");
   const [mapStatus, setMapStatus] = useState("ready");
   const [geolocationMessage, setGeolocationMessage] = useState("");
+  const [isPinning, setIsPinning] = useState(false);
 
   const selectedPoint = hasCoordinates(location) ? toLatLng(location) : null;
   const fallbackPoint = hasCoordinates(mapCenter) ? toLatLng(mapCenter) : null;
-  const mapPoint = selectedPoint || fallbackPoint;
+  const mapPoint = selectedPoint || fallbackPoint || DEFAULT_MAP_VIEW;
   const startIcon = useMemo(createStartIcon, []);
 
   useEffect(() => () => searchAbortRef.current?.abort(), []);
@@ -88,6 +93,7 @@ function StartLocationPicker({ location, mapCenter, onLocationChange, t }) {
       longitude: Number(nextLocation.longitude).toFixed(6),
       source: nextLocation.source || "map",
     });
+    setIsPinning(false);
   }
 
   async function searchPlace(event) {
@@ -170,8 +176,16 @@ function StartLocationPicker({ location, mapCenter, onLocationChange, t }) {
         <button className="start-location-button" type="button" onClick={useCurrentLocation}>
           ◉ {t.useCurrentLocation}
         </button>
-        <span className="start-picker-hint">{t.startPickerHint}</span>
+        <button
+          className={`start-pin-button${isPinning ? " active" : ""}`}
+          type="button"
+          aria-pressed={isPinning}
+          onClick={() => setIsPinning((current) => !current)}
+        >
+          ⌖ {isPinning ? t.pinStartLocationActive : t.pinStartLocation}
+        </button>
       </div>
+      <span className="start-picker-hint">{isPinning ? t.pinStartLocationHint : t.startPickerHint}</span>
 
       <div className="start-place-search">
         <form className="start-place-search-form" onSubmit={searchPlace}>
@@ -203,32 +217,30 @@ function StartLocationPicker({ location, mapCenter, onLocationChange, t }) {
         )}
       </div>
 
-      {mapPoint ? (
-        <div className="start-picker-map-shell">
-          <MapContainer
-            center={[mapPoint.lat, mapPoint.lng]}
-            zoom={selectedPoint ? 13 : 9}
-            className="start-picker-map leaflet-map"
-            scrollWheelZoom={false}
-          >
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              eventHandlers={{ tileerror: () => setMapStatus("error") }}
-            />
-            <MapViewport point={mapPoint} zoom={selectedPoint ? 13 : 9} />
-            <MapClickHandler onSelect={selectLocation} />
-            {selectedPoint && (
-              <Marker position={[selectedPoint.lat, selectedPoint.lng]} icon={startIcon}>
-                <Popup>{location?.name || t.selectedStartLocation}</Popup>
-              </Marker>
-            )}
-          </MapContainer>
-          {mapStatus === "error" && <p className="map-state-message map-error-message">{t.mapLoadError}</p>}
-        </div>
-      ) : (
-        <p className="route-empty-state">{t.mapNoCoordinates}</p>
-      )}
+      <div className={`start-picker-map-shell${isPinning ? " is-pinning" : ""}`}>
+        <MapContainer
+          center={[mapPoint.lat, mapPoint.lng]}
+          zoom={selectedPoint ? 13 : 9}
+          className="start-picker-map leaflet-map"
+          scrollWheelZoom={false}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            eventHandlers={{ tileerror: () => setMapStatus("error") }}
+          />
+          <MapViewport point={mapPoint} zoom={selectedPoint ? 13 : 9} />
+          <MapClickHandler enabled={isPinning} onSelect={selectLocation} />
+          {selectedPoint && (
+            <Marker position={[selectedPoint.lat, selectedPoint.lng]} icon={startIcon}>
+              <Popup>{location?.name || t.selectedStartLocation}</Popup>
+            </Marker>
+          )}
+        </MapContainer>
+        {isPinning && <p className="map-pin-instruction">⌖ {t.pinStartLocationHint}</p>}
+        {mapStatus === "error" && <p className="map-state-message map-error-message">{t.mapLoadError}</p>}
+      </div>
+      {!selectedPoint && <small className="field-hint">{t.defaultMapViewNotice}</small>}
 
       <div className="start-location-fields">
         <input
