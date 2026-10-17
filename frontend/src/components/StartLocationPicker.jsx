@@ -96,8 +96,7 @@ function StartLocationPicker({ location, mapCenter, onLocationChange, t }) {
     setIsPinning(false);
   }
 
-  async function searchPlace(event) {
-    event.preventDefault();
+  async function searchPlace() {
     const query = searchQuery.trim();
     if (query.length < 3) {
       setSearchStatus("error");
@@ -188,7 +187,7 @@ function StartLocationPicker({ location, mapCenter, onLocationChange, t }) {
       <span className="start-picker-hint">{isPinning ? t.pinStartLocationHint : t.startPickerHint}</span>
 
       <div className="start-place-search">
-        <form className="start-place-search-form" onSubmit={searchPlace}>
+        <div className="start-place-search-form" role="search">
           <input
             className="form-control"
             type="search"
@@ -196,9 +195,17 @@ function StartLocationPicker({ location, mapCenter, onLocationChange, t }) {
             placeholder={t.searchStartLocationPlaceholder}
             aria-label={t.searchStartLocationPlaceholder}
             onChange={(event) => setSearchQuery(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                searchPlace();
+              }
+            }}
           />
-          <button className="place-search-button" type="submit">{t.searchStartLocation}</button>
-        </form>
+          <button className="place-search-button" type="button" onClick={searchPlace}>
+            {t.searchStartLocation}
+          </button>
+        </div>
         {searchStatus === "searching" && <span>{t.searchingPlaces}</span>}
         {searchStatus === "empty" && <span>{t.noPlaceSearchResults}</span>}
         {searchStatus === "rate_limited" && <span>{t.placeSearchRateLimited}</span>}
