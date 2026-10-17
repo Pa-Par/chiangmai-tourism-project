@@ -8,14 +8,18 @@ import json
 from threading import Lock
 from time import monotonic, sleep
 from urllib.error import HTTPError, URLError
-from urllib.parse import quote
+from urllib.parse import quote, urlencode
 from urllib.request import Request, urlopen
 
 OSRM_BASE_URL = "https://router.project-osrm.org"
+NOMINATIM_SEARCH_URL = "https://nominatim.openstreetmap.org/search"
 MAX_ROUTE_STOPS = 25
 MIN_OSRM_REQUEST_INTERVAL_SECONDS = 1.1
+MIN_NOMINATIM_REQUEST_INTERVAL_SECONDS = 1.1
 _osrm_request_lock = Lock()
 _last_osrm_request_at = 0.0
+_nominatim_request_lock = Lock()
+_last_nominatim_request_at = 0.0
 
 
 def optimize_itinerary_routes(
@@ -48,6 +52,47 @@ def optimize_itinerary_routes(
         "start_locations": start_locations,
         "days": route_days,
     }
+
+
+def search_nominatim_locations(query, timeout_seconds):
+    """Search Thai locations through Nominatim for the start-point picker.
+
+    The browser calls Flask instead of the public endpoint directly because
+    the public service does not consistently permit browser CORS requests.
+    Requests are deliberately low-volume and limited to five Thai results.
+    """
+    parameters = urlencode(
+        {
+            "q": query,
+            "format": "jsonv2",
+            "limit": "5",
+            "countrycodes": "th",
+            "accept-language": "th,en",
+        }
+    )
+    _respect_nominatim_request_interval()
+    request = Request(
+        f"{NOMINATIM_SEARCH_URL}?{parameters}",
+        headers={
+            "User-Agent": (
+                "ChiangMaiNatureGuide/1.0 "
+                "(https://github.com/Pa-Par/chiangmai-tourism-project)"
+            )
+        },
+        method="GET",
+    )
+    with urlopen(request, timeout=timeout_seconds) as response:
+        response_data = json.loads(response.read().decode("utf-8"))
+
+    if not isinstance(response_data, list):
+        raise ValueError("Nominatim did not return a result list")
+
+    return [
+        result
+        for result in response_data
+        if isinstance(result, dict)
+        and _is_coordinate_pair(result.get("lon"), result.get("lat"))
+    ]
 
 
 def optimize_day_route(attractions, start_location, timeout_seconds):
@@ -187,6 +232,17 @@ def _respect_osrm_request_interval():
         if wait_seconds > 0:
             sleep(wait_seconds)
         _last_osrm_request_at = monotonic()
+
+
+def _respect_nominatim_request_interval():
+    global _last_nominatim_request_at
+    with _nominatim_request_lock:
+        wait_seconds = MIN_NOMINATIM_REQUEST_INTERVAL_SECONDS - (
+            monotonic() - _last_nominatim_request_at
+        )
+        if wait_seconds > 0:
+            sleep(wait_seconds)
+        _last_nominatim_request_at = monotonic()
 
 
 def _geometry_path(route):

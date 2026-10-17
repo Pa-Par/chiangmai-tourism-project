@@ -56,6 +56,13 @@ export async function getAttractionById(attractionId) {
   return getResponseData(await api.get(`/api/attractions/${attractionId}`));
 }
 
+export async function searchLocations(query, signal) {
+  requireApiBaseUrl();
+  return getResponseData(
+    await api.get("/api/location-search", { params: { q: query }, signal }),
+  );
+}
+
 export async function generateRecommendation(payload) {
   requireApiBaseUrl();
   return getResponseData(await api.post("/api/recommend", payload));

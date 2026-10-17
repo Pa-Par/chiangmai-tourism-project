@@ -8,56 +8,13 @@ import {
   useMap,
   useMapEvents,
 } from "react-leaflet";
+import { searchLocations } from "../services/api";
 import "leaflet/dist/leaflet.css";
 
-const NOMINATIM_SEARCH_URL = "https://nominatim.openstreetmap.org/search";
 const MIN_SEARCH_INTERVAL_MS = 1100;
 // This is only the initial viewport for the Chiang Mai project. It is never
 // submitted as a travel origin unless the user deliberately places a marker.
 const DEFAULT_MAP_VIEW = { lat: 18.788343, lng: 98.9853 };
-
-// The public Nominatim endpoint does not currently provide a CORS header for
-// browser fetch requests. Its documented JSONP callback keeps this optional,
-// user-initiated search client-side without introducing a proxy or API key.
-function requestNominatimJsonp(parameters, signal) {
-  return new Promise((resolve, reject) => {
-    const callbackName = `cmngNominatim_${Date.now()}_${Math.random().toString(36).slice(2)}`;
-    const script = document.createElement("script");
-    let settled = false;
-
-    function cleanup() {
-      delete window[callbackName];
-      script.remove();
-      signal?.removeEventListener("abort", abortRequest);
-    }
-
-    function finish(callback, value) {
-      if (settled) return;
-      settled = true;
-      cleanup();
-      callback(value);
-    }
-
-    function abortRequest() {
-      const abortError = new Error("Nominatim search aborted");
-      abortError.name = "AbortError";
-      finish(reject, abortError);
-    }
-
-    if (signal?.aborted) {
-      abortRequest();
-      return;
-    }
-
-    window[callbackName] = (results) => finish(resolve, results);
-    script.async = true;
-    script.onerror = () => finish(reject, new Error("Nominatim search failed"));
-    parameters.set("json_callback", callbackName);
-    script.src = `${NOMINATIM_SEARCH_URL}?${parameters}`;
-    signal?.addEventListener("abort", abortRequest, { once: true });
-    document.head.appendChild(script);
-  });
-}
 
 function hasCoordinates(location) {
   const latitude = Number(location?.latitude);
@@ -158,21 +115,16 @@ function StartLocationPicker({ location, mapCenter, onLocationChange, t }) {
     setSearchResults([]);
 
     try {
-      const parameters = new URLSearchParams({
-        q: query,
-        format: "jsonv2",
-        limit: "5",
-        countrycodes: "th",
-        "accept-language": "th,en",
-      });
-      const results = await requestNominatimJsonp(parameters, controller.signal);
+      const results = await searchLocations(query, controller.signal);
       const validResults = Array.isArray(results)
         ? results.filter((item) => Number.isFinite(Number(item.lat)) && Number.isFinite(Number(item.lon)))
         : [];
       setSearchResults(validResults);
       setSearchStatus(validResults.length ? "ready" : "empty");
     } catch (error) {
-      if (error.name !== "AbortError") setSearchStatus("unavailable");
+      if (error.name !== "AbortError" && error.code !== "ERR_CANCELED") {
+        setSearchStatus("unavailable");
+      }
     }
   }
 

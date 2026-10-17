@@ -1,4 +1,7 @@
-"""Endpoint that coordinates the rule-based recommendation workflow."""
+"""Endpoints for recommendation and optional map-assisted trip inputs."""
+
+import json
+from urllib.error import HTTPError, URLError
 
 from flask import Blueprint, jsonify, request
 
@@ -7,7 +10,7 @@ from database import database_cursor
 from routes.attractions import ATTRACTION_SELECT
 from services.gemini_service import select_candidate_attractions
 from services.itinerary_service import create_itinerary
-from services.maps_service import optimize_itinerary_routes
+from services.maps_service import optimize_itinerary_routes, search_nominatim_locations
 from services.recommendation_service import (
     SUPPLEMENTARY_CATEGORY_NAMES,
     calculate_result_cost,
@@ -18,6 +21,37 @@ from services.recommendation_service import (
 
 
 recommend_bp = Blueprint("recommend", __name__)
+
+
+@recommend_bp.get("/location-search")
+def location_search():
+    """Return a small, Thai-only list for choosing a user travel origin."""
+    query = request.args.get("q", "").strip()
+    if len(query) < 3:
+        return jsonify({"success": False, "message": "คำค้นหาต้องมีอย่างน้อย 3 ตัวอักษร"}), 400
+    if len(query) > 120:
+        return jsonify({"success": False, "message": "คำค้นหายาวเกินไป"}), 400
+
+    try:
+        results = search_nominatim_locations(
+            query, Config.NOMINATIM_TIMEOUT_SECONDS
+        )
+    except (
+        HTTPError,
+        URLError,
+        TimeoutError,
+        OSError,
+        ValueError,
+        json.JSONDecodeError,
+    ):
+        return jsonify(
+            {
+                "success": False,
+                "message": "ยังไม่สามารถค้นหาสถานที่จากแผนที่ได้ในขณะนี้",
+            }
+        ), 503
+
+    return jsonify({"success": True, "data": results}), 200
 
 
 @recommend_bp.post("/recommend")

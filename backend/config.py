@@ -54,3 +54,6 @@ class Config:
     # OSRM is optional, public, and best-effort. A short timeout preserves the
     # MySQL-backed itinerary when road routing is temporarily unavailable.
     OSRM_TIMEOUT_SECONDS = int(os.getenv("OSRM_TIMEOUT_SECONDS", "10"))
+    NOMINATIM_TIMEOUT_SECONDS = int(
+        os.getenv("NOMINATIM_TIMEOUT_SECONDS", "10")
+    )
