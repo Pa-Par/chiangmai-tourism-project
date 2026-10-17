@@ -16,8 +16,9 @@ function AdditionalRecommendations({
     maxDistanceKm: MAX_ROUTE_DISTANCE_KM,
     limit: MAX_VISIBLE_CAFES,
   });
-  const routeReady = Boolean(cafes.length) || (routePlan?.source === "maps_javascript_routes" &&
-    routePlan.days?.some((day) => day.status === "success"));
+  const routeReady = Boolean(cafes.length) || routePlan?.days?.some(
+    (day) => day.status === "success" && Array.isArray(day.path) && day.path.length > 1,
+  );
   return (
     <section className="additional-recommendations" aria-labelledby="additional-title">
       <div className="additional-heading">

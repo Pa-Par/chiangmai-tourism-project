@@ -100,8 +100,7 @@ def recommend():
         itinerary["days"],
         criteria["start_locations"],
         criteria["use_start_location_each_day"],
-        Config.GOOGLE_MAPS_SERVER_API_KEY,
-        Config.GOOGLE_MAPS_ROUTES_TIMEOUT_SECONDS,
+        Config.OSRM_TIMEOUT_SECONDS,
     )
     cost_summary = calculate_result_cost(itinerary["days"])
 

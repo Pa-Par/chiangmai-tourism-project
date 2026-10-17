@@ -78,7 +78,7 @@ function ResultPage({ result, onStartOver, cafeCandidates, language, t }) {
           />
           <TripMap
             itinerary={displayedItinerary}
-            routePlan={clientRoutePlan}
+            routePlan={activeRoutePlan}
             startLocations={itinerary.criteria?.start_locations}
             useSameStartLocation={itinerary.criteria?.use_start_location_each_day}
             onRoutesComputed={handleRoutesComputed}
@@ -97,7 +97,7 @@ function ResultPage({ result, onStartOver, cafeCandidates, language, t }) {
           />
           <AdditionalRecommendations
             cafeCandidates={cafeCandidates}
-            routePlan={clientRoutePlan}
+            routePlan={activeRoutePlan}
             selectedCafes={selectedCafes}
             onToggleCafe={toggleCafeStop}
             language={language}

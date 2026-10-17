@@ -1,41 +1,30 @@
-"""Server-side Google Routes API integration for real road-route data.
+"""OSRM integration for optional, real road-route data.
 
-The module is deliberately optional.  If the server key, a user-supplied
-start point, or complete coordinates are unavailable, it returns an explicit
-status and preserves the safe deterministic itinerary order instead of
-presenting a straight-line estimate as a road route.
+The public OSRM demo service is best-effort. A route failure never prevents
+the database-backed itinerary from being returned to the user.
 """
 
 import json
+from threading import Lock
+from time import monotonic, sleep
 from urllib.error import HTTPError, URLError
+from urllib.parse import quote
 from urllib.request import Request, urlopen
 
-from services.recommendation_service import calculate_haversine_distance_km
-
-
-ROUTES_ENDPOINT = "https://routes.googleapis.com/directions/v2:computeRoutes"
-ROUTES_FIELDMASK = (
-    "routes.distanceMeters,routes.duration,routes.legs.distanceMeters,"
-    "routes.legs.duration,routes.polyline.encodedPolyline,"
-    "routes.optimizedIntermediateWaypointIndex"
-)
+OSRM_BASE_URL = "https://router.project-osrm.org"
 MAX_ROUTE_STOPS = 25
+MIN_OSRM_REQUEST_INTERVAL_SECONDS = 1.1
+_osrm_request_lock = Lock()
+_last_osrm_request_at = 0.0
 
 
 def optimize_itinerary_routes(
     itinerary_days,
     start_locations,
     use_start_location_each_day,
-    api_key,
     timeout_seconds,
 ):
-    """Optimize from a user-provided origin without inventing overnight stays.
-
-    Day 1 uses its supplied origin.  Other days only use the Day 1 origin when the user has
-    explicitly indicated the same starting point applies each day.  Otherwise
-    their geographically grouped order is retained and marked as not
-    road-calculated; the system never invents an overnight location.
-    """
+    """Optimize each day from its user-supplied origin with OSRM."""
     updated_days = []
     route_days = []
 
@@ -46,7 +35,6 @@ def optimize_itinerary_routes(
         optimized_attractions, route_data = optimize_day_route(
             day["attractions"],
             origin,
-            api_key,
             timeout_seconds,
         )
         updated_day = dict(day)
@@ -55,14 +43,15 @@ def optimize_itinerary_routes(
         route_days.append({"day": day["day"], **route_data})
 
     return updated_days, {
+        "source": "osrm",
         "start_location": start_locations.get(1),
         "start_locations": start_locations,
         "days": route_days,
     }
 
 
-def optimize_day_route(attractions, start_location, api_key, timeout_seconds):
-    """Call Google Routes API for one day and return reordered attractions."""
+def optimize_day_route(attractions, start_location, timeout_seconds):
+    """Request an OSRM driving route and preserve the returned stop order."""
     original_attractions = list(attractions)
     if not original_attractions:
         return original_attractions, _route_status("no_stops", "ไม่มีสถานที่ในวันนี้")
@@ -71,129 +60,166 @@ def optimize_day_route(attractions, start_location, api_key, timeout_seconds):
             "missing_start_location",
             "ยังไม่ได้ระบุจุดเริ่มต้น จึงไม่คำนวณเส้นทางถนนจริง",
         )
-    if not api_key:
-        return original_attractions, _route_status(
-            "not_configured",
-            "ยังไม่ได้ตั้งค่า Google Maps Routes API ฝั่งเซิร์ฟเวอร์",
-        )
     if len(original_attractions) > MAX_ROUTE_STOPS:
         return original_attractions, _route_status(
             "too_many_stops",
             "มีจำนวนสถานที่เกินขีดจำกัดสำหรับการคำนวณเส้นทางครั้งเดียว",
         )
 
+    origin_coordinates = _coordinates_of(start_location)
     stop_coordinates = [_coordinates_of(attraction) for attraction in original_attractions]
-    if any(coordinates is None for coordinates in stop_coordinates):
+    if origin_coordinates is None or any(coordinates is None for coordinates in stop_coordinates):
         return original_attractions, _route_status(
             "missing_coordinates",
             "มีสถานที่บางแห่งไม่มีพิกัดที่ใช้คำนวณเส้นทางถนนได้",
         )
 
-    # Directions needs a fixed destination.  Select the geographically furthest
-    # candidate from the user origin, then let Google optimize all intermediate
-    # stops using actual road-route data.  This avoids assuming a return trip.
-    origin_coordinates = (start_location["latitude"], start_location["longitude"])
-    destination_index = max(
-        range(len(original_attractions)),
-        key=lambda index: calculate_haversine_distance_km(
-            origin_coordinates, stop_coordinates[index]
-        ),
-    )
-    destination = original_attractions[destination_index]
-    intermediates = [
-        attraction
-        for index, attraction in enumerate(original_attractions)
-        if index != destination_index
-    ]
-
-    request_body = {
-        "origin": _route_waypoint(start_location),
-        "destination": _route_waypoint(destination),
-        "travelMode": "DRIVE",
-        "routingPreference": "TRAFFIC_AWARE",
-        "computeAlternativeRoutes": False,
-        "optimizeWaypointOrder": bool(intermediates),
-    }
-    if intermediates:
-        request_body["intermediates"] = [_route_waypoint(item) for item in intermediates]
-
-    request = Request(
-        ROUTES_ENDPOINT,
-        data=json.dumps(request_body).encode("utf-8"),
-        headers={
-            "Content-Type": "application/json",
-            "X-Goog-Api-Key": api_key,
-            "X-Goog-FieldMask": ROUTES_FIELDMASK,
-        },
-        method="POST",
-    )
     try:
-        with urlopen(request, timeout=timeout_seconds) as response:
-            response_data = json.loads(response.read().decode("utf-8"))
-        route = response_data["routes"][0]
-    except (HTTPError, URLError, TimeoutError, OSError, KeyError, IndexError, TypeError, json.JSONDecodeError):
+        if len(original_attractions) == 1:
+            route, path = _request_osrm_route(
+                [origin_coordinates, stop_coordinates[0]],
+                timeout_seconds,
+            )
+            ordered_attractions = original_attractions
+        else:
+            route, path, waypoint_order = _request_osrm_trip(
+                [origin_coordinates, *stop_coordinates],
+                timeout_seconds,
+            )
+            ordered_attractions = [
+                original_attractions[index - 1]
+                for index in waypoint_order
+                if index > 0 and index <= len(original_attractions)
+            ]
+            if len(ordered_attractions) != len(original_attractions):
+                raise ValueError("Incomplete OSRM waypoint order")
+    except (
+        HTTPError,
+        URLError,
+        TimeoutError,
+        OSError,
+        KeyError,
+        IndexError,
+        TypeError,
+        ValueError,
+        json.JSONDecodeError,
+    ):
         return original_attractions, _route_status(
             "unavailable",
-            "ไม่สามารถคำนวณเส้นทางถนนด้วย Google Maps ได้ในขณะนี้",
+            "ไม่สามารถคำนวณเส้นทางถนนด้วย OSRM ได้ในขณะนี้",
         )
 
-    optimized_indexes = route.get("optimizedIntermediateWaypointIndex", [])
-    try:
-        ordered_intermediates = [intermediates[int(index)] for index in optimized_indexes]
-        if len(ordered_intermediates) != len(intermediates):
-            raise ValueError("Incomplete waypoint optimization")
-    except (TypeError, ValueError, IndexError):
-        ordered_intermediates = intermediates
-
-    ordered_attractions = [*ordered_intermediates, destination]
     return ordered_attractions, {
         "status": "success",
-        "message": "ลำดับและข้อมูลเส้นทางถนนคำนวณจาก Google Maps Routes API",
+        "message": "ลำดับและข้อมูลเส้นทางถนนคำนวณจาก OSRM",
         "origin": _public_location(start_location),
-        "distance_meters": route.get("distanceMeters"),
-        "duration_seconds": _duration_to_seconds(route.get("duration")),
-        "polyline": route.get("polyline", {}).get("encodedPolyline"),
+        "distance_meters": _number_or_none(route.get("distance")),
+        "duration_seconds": _number_or_none(route.get("duration")),
         "legs": [
             {
-                "distance_meters": leg.get("distanceMeters"),
-                "duration_seconds": _duration_to_seconds(leg.get("duration")),
+                "distance_meters": _number_or_none(leg.get("distance")),
+                "duration_seconds": _number_or_none(leg.get("duration")),
             }
             for leg in route.get("legs", [])
         ],
+        "polyline": None,
+        "path": path,
         "optimized_attraction_ids": [
             attraction.get("attraction_id") for attraction in ordered_attractions
         ],
     }
 
 
-def _route_waypoint(location):
-    return {
-        "location": {
-            "latLng": {
-                "latitude": float(location["latitude"]),
-                "longitude": float(location["longitude"]),
-            }
-        }
-    }
+def _request_osrm_trip(coordinates, timeout_seconds):
+    response_data = _request_osrm(
+        "trip",
+        coordinates,
+        "roundtrip=false&source=first&destination=any&steps=false&geometries=geojson&overview=full",
+        timeout_seconds,
+    )
+    route = response_data["trips"][0]
+    waypoint_order = [
+        index
+        for index, _waypoint in sorted(
+            enumerate(response_data["waypoints"]),
+            key=lambda item: int(item[1].get("waypoint_index")),
+        )
+    ]
+    return route, _geometry_path(route), waypoint_order
+
+
+def _request_osrm_route(coordinates, timeout_seconds):
+    response_data = _request_osrm(
+        "route",
+        coordinates,
+        "steps=false&geometries=geojson&overview=full",
+        timeout_seconds,
+    )
+    route = response_data["routes"][0]
+    return route, _geometry_path(route)
+
+
+def _request_osrm(service, coordinates, query, timeout_seconds):
+    coordinate_text = ";".join(
+        f"{longitude:.6f},{latitude:.6f}" for latitude, longitude in coordinates
+    )
+    endpoint = (
+        f"{OSRM_BASE_URL}/{service}/v1/driving/"
+        f"{quote(coordinate_text, safe=',;.')}?{query}"
+    )
+    _respect_osrm_request_interval()
+    request = Request(
+        endpoint,
+        headers={"User-Agent": "ChiangMaiNatureGuide/1.0 (undergraduate research project)"},
+        method="GET",
+    )
+    with urlopen(request, timeout=timeout_seconds) as response:
+        response_data = json.loads(response.read().decode("utf-8"))
+    if response_data.get("code") != "Ok":
+        raise ValueError("OSRM did not return a route")
+    return response_data
+
+
+def _respect_osrm_request_interval():
+    global _last_osrm_request_at
+    with _osrm_request_lock:
+        wait_seconds = MIN_OSRM_REQUEST_INTERVAL_SECONDS - (monotonic() - _last_osrm_request_at)
+        if wait_seconds > 0:
+            sleep(wait_seconds)
+        _last_osrm_request_at = monotonic()
+
+
+def _geometry_path(route):
+    coordinates = route.get("geometry", {}).get("coordinates", [])
+    return [
+        {"lat": float(latitude), "lng": float(longitude)}
+        for longitude, latitude in coordinates
+        if _is_coordinate_pair(longitude, latitude)
+    ]
+
+
+def _is_coordinate_pair(longitude, latitude):
+    try:
+        return -180 <= float(longitude) <= 180 and -90 <= float(latitude) <= 90
+    except (TypeError, ValueError):
+        return False
 
 
 def _coordinates_of(attraction):
     try:
         latitude = float(attraction.get("latitude"))
         longitude = float(attraction.get("longitude"))
-    except (TypeError, ValueError):
+    except (AttributeError, TypeError, ValueError):
         return None
     if not -90 <= latitude <= 90 or not -180 <= longitude <= 180:
         return None
     return latitude, longitude
 
 
-def _duration_to_seconds(value):
-    if not isinstance(value, str) or not value.endswith("s"):
-        return None
+def _number_or_none(value):
     try:
-        return round(float(value[:-1]))
-    except ValueError:
+        return float(value)
+    except (TypeError, ValueError):
         return None
 
 
@@ -213,6 +239,7 @@ def _route_status(status, message):
         "distance_meters": None,
         "duration_seconds": None,
         "polyline": None,
+        "path": [],
         "legs": [],
         "optimized_attraction_ids": [],
     }

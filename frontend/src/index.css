@@ -434,14 +434,58 @@ a:focus-visible {
   margin-bottom: 10px;
 }
 
-.place-autocomplete-host {
-  width: 100%;
-  min-width: 0;
+.start-place-search-form {
+  display: flex;
+  gap: 8px;
 }
 
-.place-autocomplete-host > gmp-place-autocomplete {
-  display: block;
+.place-search-button {
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 9px;
+  padding: 0 13px;
+  background: var(--forest);
+  color: #fff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.place-search-button:hover {
+  background: var(--leaf);
+}
+
+.place-search-results {
+  max-height: 174px;
+  margin: 7px 0 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  border: 1px solid #d8e8da;
+  border-radius: 9px;
+  background: #fff;
+}
+
+.place-search-results li + li {
+  border-top: 1px solid #edf3eb;
+}
+
+.place-search-results button {
   width: 100%;
+  border: 0;
+  padding: 8px 10px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: left;
+  cursor: pointer;
+}
+
+.place-search-results button:hover {
+  background: #eff8ee;
 }
 
 .start-place-search > span {
@@ -465,6 +509,37 @@ a:focus-visible {
 .start-picker-map {
   width: 100%;
   height: 100%;
+}
+
+.leaflet-map .leaflet-control-attribution {
+  font-size: 9px;
+}
+
+.leaflet-numbered-marker-wrapper {
+  background: transparent;
+  border: 0;
+}
+
+.leaflet-numbered-marker {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 2px solid #fff;
+  border-radius: 999px;
+  box-shadow: 0 2px 7px rgba(23, 70, 44, 0.28);
+  background: var(--leaf);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.leaflet-numbered-marker--start {
+  background: var(--forest);
+}
+
+.leaflet-numbered-marker--cafe {
+  background: #b4772d;
 }
 
 .start-location-fields {
@@ -823,7 +898,7 @@ a:focus-visible {
   font-size: 28px;
 }
 
-.google-route-map-shell {
+.osm-route-map-shell {
   position: relative;
   min-height: 270px;
   margin-top: 18px;
@@ -833,7 +908,7 @@ a:focus-visible {
   background: linear-gradient(145deg, #eaf5e8, #f6f0de);
 }
 
-.google-route-map {
+.osm-route-map {
   width: 100%;
   height: 270px;
 }
@@ -849,6 +924,7 @@ a:focus-visible {
   font-size: 13px;
   font-weight: 800;
   text-align: center;
+  pointer-events: none;
 }
 
 .map-error-message {
@@ -1875,6 +1951,14 @@ a:focus-visible {
     flex-direction: column;
   }
 
+  .start-place-search-form {
+    flex-direction: column;
+  }
+
+  .place-search-button {
+    min-height: 38px;
+  }
+
   .generate-button {
     width: 100%;
     margin-top: 26px;
@@ -1946,8 +2030,8 @@ a:focus-visible {
     padding: 20px;
   }
 
-  .google-route-map-shell,
-  .google-route-map {
+  .osm-route-map-shell,
+  .osm-route-map {
     min-height: 230px;
     height: 230px;
   }

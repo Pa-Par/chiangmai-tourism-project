@@ -1,6 +1,17 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import L from "leaflet";
+import {
+  MapContainer,
+  Marker,
+  Popup,
+  TileLayer,
+  useMap,
+  useMapEvents,
+} from "react-leaflet";
+import "leaflet/dist/leaflet.css";
 
-import { loadGoogleMaps } from "../services/googleMapsLoader";
+const NOMINATIM_SEARCH_URL = "https://nominatim.openstreetmap.org/search";
+const MIN_SEARCH_INTERVAL_MS = 1100;
 
 function hasCoordinates(location) {
   const latitude = Number(location?.latitude);
@@ -17,23 +28,61 @@ function hasCoordinates(location) {
   );
 }
 
-function StartLocationPicker({ day, location, mapCenter, onLocationChange, t }) {
-  const mapContainerRef = useRef(null);
-  const searchHostRef = useRef(null);
-  const mapRef = useRef(null);
-  const markerRef = useRef(null);
-  const infoWindowRef = useRef(null);
-  const onLocationChangeRef = useRef(onLocationChange);
-  const [mapStatus, setMapStatus] = useState("loading");
-  const [searchStatus, setSearchStatus] = useState("loading");
-  const [geolocationMessage, setGeolocationMessage] = useState("");
+function toLatLng(location) {
+  return { lat: Number(location.latitude), lng: Number(location.longitude) };
+}
+
+function createStartIcon() {
+  return L.divIcon({
+    className: "leaflet-numbered-marker-wrapper",
+    html: '<span class="leaflet-numbered-marker leaflet-numbered-marker--start">S</span>',
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+    popupAnchor: [0, -16],
+  });
+}
+
+function MapViewport({ point, zoom }) {
+  const map = useMap();
 
   useEffect(() => {
-    onLocationChangeRef.current = onLocationChange;
-  }, [onLocationChange]);
+    if (point) map.setView([point.lat, point.lng], zoom);
+  }, [map, point, zoom]);
+
+  return null;
+}
+
+function MapClickHandler({ onSelect }) {
+  useMapEvents({
+    click(event) {
+      onSelect({
+        latitude: event.latlng.lat,
+        longitude: event.latlng.lng,
+        source: "map",
+      });
+    },
+  });
+  return null;
+}
+
+function StartLocationPicker({ location, mapCenter, onLocationChange, t }) {
+  const searchAbortRef = useRef(null);
+  const lastSearchAtRef = useRef(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchStatus, setSearchStatus] = useState("ready");
+  const [mapStatus, setMapStatus] = useState("ready");
+  const [geolocationMessage, setGeolocationMessage] = useState("");
+
+  const selectedPoint = hasCoordinates(location) ? toLatLng(location) : null;
+  const fallbackPoint = hasCoordinates(mapCenter) ? toLatLng(mapCenter) : null;
+  const mapPoint = selectedPoint || fallbackPoint;
+  const startIcon = useMemo(createStartIcon, []);
+
+  useEffect(() => () => searchAbortRef.current?.abort(), []);
 
   function selectLocation(nextLocation) {
-    onLocationChangeRef.current({
+    onLocationChange({
       name: nextLocation.name || "",
       latitude: Number(nextLocation.latitude).toFixed(6),
       longitude: Number(nextLocation.longitude).toFixed(6),
@@ -41,133 +90,59 @@ function StartLocationPicker({ day, location, mapCenter, onLocationChange, t }) 
     });
   }
 
-  useEffect(() => {
-    let disposed = false;
-    let mapClickListener;
-    let autocompleteElement;
-    let onPlaceSelect;
-
-    async function initializeMap() {
-      try {
-        const maps = await loadGoogleMaps();
-        if (disposed || !mapContainerRef.current) return;
-        // The initial view uses only the aggregate of real attraction
-        // coordinates fetched from MySQL. It is never submitted as a start.
-        const map = new maps.Map(mapContainerRef.current, {
-          center: hasCoordinates(location)
-            ? { lat: Number(location.latitude), lng: Number(location.longitude) }
-            : hasCoordinates(mapCenter)
-              ? { lat: Number(mapCenter.latitude), lng: Number(mapCenter.longitude) }
-              : { lat: 0, lng: 0 },
-          zoom: hasCoordinates(location) ? 13 : hasCoordinates(mapCenter) ? 9 : 2,
-          clickableIcons: false,
-          fullscreenControl: false,
-          mapTypeControl: false,
-          streetViewControl: false,
-          gestureHandling: "cooperative",
-        });
-        mapRef.current = map;
-        infoWindowRef.current = new maps.InfoWindow();
-        mapClickListener = map.addListener("click", (event) => {
-          if (!event.latLng) return;
-          selectLocation({
-            latitude: event.latLng.lat(),
-            longitude: event.latLng.lng(),
-            source: "map",
-          });
-        });
-        setMapStatus("ready");
-
-        try {
-          const { PlaceAutocompleteElement } = await maps.importLibrary("places");
-          if (disposed || !searchHostRef.current || !PlaceAutocompleteElement) return;
-          autocompleteElement = new PlaceAutocompleteElement();
-          autocompleteElement.placeholder = t.searchStartLocationPlaceholder;
-          autocompleteElement.setAttribute("aria-label", t.searchStartLocationPlaceholder);
-          onPlaceSelect = async (event) => {
-            try {
-              const prediction = event.placePrediction || event.place;
-              const place = prediction?.toPlace ? prediction.toPlace() : prediction;
-              if (!place?.fetchFields) throw new Error("Selected place is unavailable");
-              await place.fetchFields({ fields: ["displayName", "location"] });
-              const placeLocation = place.location;
-              const latitude = typeof placeLocation?.lat === "function"
-                ? placeLocation.lat()
-                : placeLocation?.lat;
-              const longitude = typeof placeLocation?.lng === "function"
-                ? placeLocation.lng()
-                : placeLocation?.lng;
-              if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
-                throw new Error("Selected place has no coordinates");
-              }
-              selectLocation({
-                name: String(place.displayName || ""),
-                latitude,
-                longitude,
-                source: "place_search",
-              });
-              setSearchStatus("ready");
-            } catch {
-              setSearchStatus("error");
-            }
-          };
-          autocompleteElement.addEventListener("gmp-select", onPlaceSelect);
-          searchHostRef.current.replaceChildren(autocompleteElement);
-          setSearchStatus("ready");
-        } catch {
-          setSearchStatus("unavailable");
-        }
-      } catch {
-        if (!disposed) {
-          setMapStatus("error");
-          setSearchStatus("unavailable");
-        }
-      }
+  async function searchPlace(event) {
+    event.preventDefault();
+    const query = searchQuery.trim();
+    if (query.length < 3) {
+      setSearchStatus("error");
+      return;
+    }
+    if (Date.now() - lastSearchAtRef.current < MIN_SEARCH_INTERVAL_MS) {
+      setSearchStatus("rate_limited");
+      return;
     }
 
-    initializeMap();
-    return () => {
-      disposed = true;
-      mapClickListener?.remove();
-      if (autocompleteElement && onPlaceSelect) {
-        autocompleteElement.removeEventListener("gmp-select", onPlaceSelect);
-      }
-      markerRef.current?.setMap(null);
-      markerRef.current = null;
-      infoWindowRef.current?.close();
-      mapRef.current = null;
-    };
-  }, [day, t]);
+    searchAbortRef.current?.abort();
+    const controller = new AbortController();
+    searchAbortRef.current = controller;
+    lastSearchAtRef.current = Date.now();
+    setSearchStatus("searching");
+    setSearchResults([]);
 
-  useEffect(() => {
-    if (!mapRef.current || !window.google?.maps || !hasCoordinates(location)) return;
-    const maps = window.google.maps;
-    const position = { lat: Number(location.latitude), lng: Number(location.longitude) };
-    if (!markerRef.current) {
-      markerRef.current = new maps.Marker({
-        map: mapRef.current,
-        position,
-        label: { text: "S", color: "#ffffff", fontWeight: "700" },
-        title: location.name || t.selectedStartLocation,
-        zIndex: 5,
+    try {
+      const parameters = new URLSearchParams({
+        q: query,
+        format: "jsonv2",
+        limit: "5",
+        countrycodes: "th",
+        "accept-language": "th,en",
       });
-      markerRef.current.addListener("click", () => {
-        infoWindowRef.current?.setContent(location.name || t.selectedStartLocation);
-        infoWindowRef.current?.open({ map: mapRef.current, anchor: markerRef.current });
+      const response = await fetch(`${NOMINATIM_SEARCH_URL}?${parameters}`, {
+        signal: controller.signal,
       });
-    } else {
-      markerRef.current.setPosition(position);
-      markerRef.current.setTitle(location.name || t.selectedStartLocation);
+      if (!response.ok) throw new Error("Nominatim search failed");
+      const results = await response.json();
+      const validResults = Array.isArray(results)
+        ? results.filter((item) => Number.isFinite(Number(item.lat)) && Number.isFinite(Number(item.lon)))
+        : [];
+      setSearchResults(validResults);
+      setSearchStatus(validResults.length ? "ready" : "empty");
+    } catch (error) {
+      if (error.name !== "AbortError") setSearchStatus("unavailable");
     }
-    mapRef.current.panTo(position);
-    mapRef.current.setZoom(13);
-  }, [location, t]);
+  }
 
-  useEffect(() => {
-    if (!mapRef.current || hasCoordinates(location) || !hasCoordinates(mapCenter)) return;
-    mapRef.current.panTo({ lat: Number(mapCenter.latitude), lng: Number(mapCenter.longitude) });
-    mapRef.current.setZoom(9);
-  }, [location, mapCenter]);
+  function selectSearchResult(result) {
+    selectLocation({
+      name: result.display_name || result.name || "",
+      latitude: result.lat,
+      longitude: result.lon,
+      source: "place_search",
+    });
+    setSearchQuery(result.display_name || result.name || "");
+    setSearchResults([]);
+    setSearchStatus("ready");
+  }
 
   function useCurrentLocation() {
     setGeolocationMessage("");
@@ -199,17 +174,61 @@ function StartLocationPicker({ day, location, mapCenter, onLocationChange, t }) 
       </div>
 
       <div className="start-place-search">
-        <div className="place-autocomplete-host" ref={searchHostRef} />
-        {searchStatus === "loading" && <span>{t.loadingPlaceSearch}</span>}
+        <form className="start-place-search-form" onSubmit={searchPlace}>
+          <input
+            className="form-control"
+            type="search"
+            value={searchQuery}
+            placeholder={t.searchStartLocationPlaceholder}
+            aria-label={t.searchStartLocationPlaceholder}
+            onChange={(event) => setSearchQuery(event.target.value)}
+          />
+          <button className="place-search-button" type="submit">{t.searchStartLocation}</button>
+        </form>
+        {searchStatus === "searching" && <span>{t.searchingPlaces}</span>}
+        {searchStatus === "empty" && <span>{t.noPlaceSearchResults}</span>}
+        {searchStatus === "rate_limited" && <span>{t.placeSearchRateLimited}</span>}
         {searchStatus === "unavailable" && <span>{t.placeSearchUnavailable}</span>}
         {searchStatus === "error" && <span>{t.placeSearchError}</span>}
+        {searchResults.length > 0 && (
+          <ul className="place-search-results">
+            {searchResults.map((result) => (
+              <li key={`${result.osm_type}-${result.osm_id}`}>
+                <button type="button" onClick={() => selectSearchResult(result)}>
+                  {result.display_name}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
-      <div className="start-picker-map-shell">
-        <div className="start-picker-map" ref={mapContainerRef} />
-        {mapStatus === "loading" && <p className="map-state-message">{t.mapLoading}</p>}
-        {mapStatus === "error" && <p className="map-state-message map-error-message">{t.mapLoadError}</p>}
-      </div>
+      {mapPoint ? (
+        <div className="start-picker-map-shell">
+          <MapContainer
+            center={[mapPoint.lat, mapPoint.lng]}
+            zoom={selectedPoint ? 13 : 9}
+            className="start-picker-map leaflet-map"
+            scrollWheelZoom={false}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              eventHandlers={{ tileerror: () => setMapStatus("error") }}
+            />
+            <MapViewport point={mapPoint} zoom={selectedPoint ? 13 : 9} />
+            <MapClickHandler onSelect={selectLocation} />
+            {selectedPoint && (
+              <Marker position={[selectedPoint.lat, selectedPoint.lng]} icon={startIcon}>
+                <Popup>{location?.name || t.selectedStartLocation}</Popup>
+              </Marker>
+            )}
+          </MapContainer>
+          {mapStatus === "error" && <p className="map-state-message map-error-message">{t.mapLoadError}</p>}
+        </div>
+      ) : (
+        <p className="route-empty-state">{t.mapNoCoordinates}</p>
+      )}
 
       <div className="start-location-fields">
         <input
@@ -240,6 +259,7 @@ function StartLocationPicker({ day, location, mapCenter, onLocationChange, t }) 
         />
       </div>
       {geolocationMessage && <small className="field-hint">{geolocationMessage}</small>}
+      <small className="field-hint">{t.nominatimUsageNotice}</small>
     </div>
   );
 }

@@ -98,7 +98,7 @@ export function getRouteCafeRecommendations(
   routePlan,
   { maxDistanceKm = 5, limit = 3 } = {},
 ) {
-  const routeDays = (routePlan?.source === "maps_javascript_routes" ? routePlan.days : [])
+  const routeDays = (routePlan?.days || [])
     .filter((day) => day.status === "success" && Array.isArray(day.path) && day.path.length > 1)
     .map((day) => ({
       ...day,

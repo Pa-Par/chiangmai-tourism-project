@@ -39,9 +39,6 @@ class Config:
         os.getenv("GEMINI_FAILURE_COOLDOWN_SECONDS", "60")
     )
 
-    GOOGLE_MAPS_SERVER_API_KEY = os.getenv(
-        "GOOGLE_MAPS_SERVER_API_KEY", ""
-    ).strip()
-    GOOGLE_MAPS_ROUTES_TIMEOUT_SECONDS = int(
-        os.getenv("GOOGLE_MAPS_ROUTES_TIMEOUT_SECONDS", "5")
-    )
+    # OSRM is optional, public, and best-effort. A short timeout preserves the
+    # MySQL-backed itinerary when road routing is temporarily unavailable.
+    OSRM_TIMEOUT_SECONDS = int(os.getenv("OSRM_TIMEOUT_SECONDS", "10"))
